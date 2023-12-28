@@ -11,8 +11,9 @@ jQuery(function ($) {
 			data: $(this).serialize(),
 		})
 			.done(function (response) {
-				var responseObj = $.parseJSON(response);
+                var responseObj = $.parseJSON(response);
 				var content = '';
+                
 				content += '<p>Flight offers from ' +
 					$('#originLocationCode').val() +
 					' to ' + $('#destinationLocationCode').val() +
@@ -32,6 +33,9 @@ jQuery(function ($) {
 					var id = data.id;
 					var currencyCode= data.price.currency;
 					var totalAmount = data.price.total;
+					var flightNumber = data.itineraries[0].segments[0].carrierCode + ' ' + data.itineraries[0].segments[0].number;
+
+                    var airlineName = airlines[data.itineraries[0].segments[0].carrierCode].name
 
 					var segment_count = 0;
 					$.each(data.itineraries, function (idx, itinerary) {
@@ -40,8 +44,6 @@ jQuery(function ($) {
 							var departure_time = segment.departure.at;
 							var arrival_at = segment.arrival.iataCode;
 							var arrival_time = segment.arrival.at;
-							var carrierCode = segment.carrierCode;
-							var number = segment.number;
 							var stops = segment.numberOfStops;
 							var duration = segment.duration;
 							content += '<tr>';
@@ -50,7 +52,7 @@ jQuery(function ($) {
 								departure_time + '</td><td>' +
 								arrival_at + '</td><td>' +
 								arrival_time + '</td><td>' +
-								carrierCode + ' ' + number +
+								flightNumber + airlineName +
 								'</td><td>' +
 								duration + '</td>';
 							//number of stops
@@ -72,24 +74,28 @@ jQuery(function ($) {
 
 // // Function to fetch airline information using carrier codes
 // function getAirlineInfo(carrierCode) {
-//     return new Promise(function (resolve, reject) {
-//         $.ajax({
-//             url: ajax_object.ajax_url,
-//             type: "post",
-//             dataType: 'JSON',
-//             data: {
-//                 action: 'get_airline_info',
-//                 carrierCode: carrierCode
-//             }
-//         })
-//         .done(function (response) {
-//             var responseObj = $.parseJSON(response);
-//             resolve(responseObj.data.name); // Resolve the promise with airline name
-//         })
-//         .fail(function (jqXHR, textStatus) {
-//             reject(jqXHR.responseText); // Reject the promise with error message
-//         });
-//     });
+
+// 	// Create a promise to return
+// 	return new Promise(function (resolve, reject) {
+// 		$.ajax({
+// 			url: 'https://test.api.amadeus.com/v1/reference-data/airlines',
+// 			type: "post",
+// 			dataType: 'JSON',
+// 			data: {
+// 				action: 'get_airline_info',
+// 				carrier_code: carrierCode
+// 			},
+// 		})
+// 			.done(function (response) {
+// 				var responseObj = $.parseJSON(response);
+// 				var airlineName = responseObj.data[0].businessName;
+// 				resolve(airlineName);
+// 			})
+// 			.fail(function (jqXHR, textStatus) {
+// 				reject(jqXHR.responseText);
+// 			})
+// 	})
+
 // }
 
 // jQuery(function ($) {

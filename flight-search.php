@@ -46,5 +46,4 @@ function flight_search_shortcode() {
 
 add_shortcode('flight_search', 'flight_search_shortcode');
 
-
 ?>
