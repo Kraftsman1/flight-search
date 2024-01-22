@@ -30,20 +30,20 @@ require_once('admin/flight-search-api-settings.php');
 require_once('templates/get-flight-offers.php');
 require_once('templates/flight-offers-form.php');
 
-function enqueue_amadeus_script() {
-    wp_enqueue_script( 'ajax-request-amadeus-flight-offers', plugins_url( 'js/flight-search.js', __FILE__ ), array( 'jquery', 'jquery-ui-datepicker' ), True );
-    wp_enqueue_style( 'jquery-ui', 'https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css'  );
-    wp_localize_script( 'ajax-request-amadeus-flight-offers', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ), ) );
+function enqueue_amadeus_script()
+{
+    wp_enqueue_script('ajax-request-amadeus-flight-offers', plugins_url('js/flight-search.js', __FILE__), array('jquery', 'jquery-ui-datepicker'), true);
+    wp_enqueue_style('jquery-ui', 'https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css');
+    wp_localize_script('ajax-request-amadeus-flight-offers', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php')));
 }
 
-add_action( 'wp_enqueue_scripts', 'enqueue_amadeus_script' );
-add_action( 'wp_ajax_get_flight_offers_action', 'get_flight_offers' );
-add_action( 'wp_ajax_nopriv_get_flight_offers_action', 'get_flight_offers' );
+add_action('wp_enqueue_scripts', 'enqueue_amadeus_script');
+add_action('wp_ajax_get_flight_offers_action', 'get_flight_offers');
+add_action('wp_ajax_nopriv_get_flight_offers_action', 'get_flight_offers');
 
-function flight_search_shortcode() {
+function flight_search_shortcode()
+{
     flight_offers_form();
 }
 
 add_shortcode('flight_search', 'flight_search_shortcode');
-
-?>

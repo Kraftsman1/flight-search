@@ -43,22 +43,10 @@ function get_flight_offers()
         if (property_exists($response_body, 'error')) {
             die('<p>' . ($response_body->error_description) . '.</p>');
         }
-        $flight_offers = $response_body->data;
-
-        $carrierCode = array();
-        foreach ($flight_offers as $key => $value) {
-            foreach ($value->itineraries as $key => $value) {
-                foreach ($value->segments as $key => $value) {
-                    array_push($carrierCode, $value->carrierCode);
-                }
-            }
-        }
-        $carrierCode = array_unique($carrierCode);
-        $airlines = _get_airline_info($access_token, $carrierCode);
+        $flight_offers = $response_body;
 
         echo json_encode(array(
             'flight_offers' => $flight_offers,
-            'airlines' => $airlines,
         ));
 
     } catch (Exception $e) {
@@ -98,31 +86,4 @@ function _get_access_token()
     }
 
     return $access_token;
-}
-
-function _get_airline_info($access_token, $airlines)
-{
-    $endpoint = 'https://test.api.amadeus.com/v1/reference-data/airlines';
-
-    $carrierCode = array(
-        'airlineCodes' => $airlines,
-    );
-
-    $params = http_build_query($carrierCode);
-    $url = $endpoint . '?' . $params;
-    $headers = array('Authorization' => 'Bearer ' . $access_token);
-    $options = array(
-        'timeout' => 10,
-    );
-
-    try {
-        $requests_response = Requests::get($url, $headers, $options);
-        $response_body = json_decode($requests_response->body);
-        if (property_exists($response_body, 'error')) {
-            die('<p>' . ($response_body->error_description) . '.</p>');
-        }
-        return $response_body->data;
-    } catch (Exception $e) {
-        die('<p>' . ($e->getMessage()) . '.</p>');
-    }
 }
